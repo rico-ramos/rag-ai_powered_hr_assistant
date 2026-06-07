@@ -1,12 +1,12 @@
-from app.retrieval.retriever import get_retriever
+from app.chains.rag_chain import answer_question
 
-retriever = get_retriever()
+result = answer_question(
+    "What does the policy say about employee training and development?"
+)
 
-docs = retriever.invoke("What does the policy say about training and learning?")
+print(result["answer"])
+print("\nSources:")
+for source in result["sources"]:
+    print(f"- {source['source']} (Page {source['page']})")
 
-print(f"Retrieved {len(docs)} chunks")
-
-for doc in docs:
-    print(doc.metadata)
-    print(doc.page_content[:300])
-    print("-" * 80)
+print(f"\nRetrieved Chunks: {result['retrieved_chunks']}")
