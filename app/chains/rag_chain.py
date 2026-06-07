@@ -38,6 +38,21 @@ def format_documents(documents: List[Document]) -> str:
     return "\n\n---\n\n".join(formatted_docs)
 
 
+
+def format_source_name(source: str) -> str:
+    """Convert stored filenames into user-friendly source names."""
+
+    source = source.replace(".pdf", "")
+
+    # Remove timestamp prefixes like:
+    # 1728286846_
+    if "_" in source and source.split("_")[0].isdigit():
+        source = "_".join(source.split("_")[1:])
+
+    return source.replace("_", " ").title()
+
+
+
 def get_sources(documents: List[Document]) -> List[Dict[str, Any]]:
     """Extract source metadata from retrieved documents."""
 
@@ -45,7 +60,12 @@ def get_sources(documents: List[Document]) -> List[Dict[str, Any]]:
     sources = []
 
     for doc in documents:
-        source = doc.metadata.get("source", "Unknown source")
+        source = format_source_name(
+            doc.metadata.get(
+                "source",
+                "Unknown source"
+            )
+        )
         page = doc.metadata.get("page", "Unknown page")
 
         if isinstance(page, int):
