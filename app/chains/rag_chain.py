@@ -10,7 +10,7 @@ Responsibilities:
 - Return answer and source metadata
 """
 
-import os
+import time
 from typing import Dict, List, Any
 
 from langchain_core.documents import Document
@@ -69,6 +69,8 @@ def get_sources(documents: List[Document]) -> List[Dict[str, Any]]:
 def answer_question(question: str) -> Dict[str, Any]:
     """Answer a user question using the RAG pipeline."""
 
+    start_time = time.perf_counter()
+
     if not question.strip():
         raise ValueError("Question cannot be empty.")
 
@@ -92,8 +94,39 @@ def answer_question(question: str) -> Dict[str, Any]:
         }
     )
 
+    end_time = time.perf_counter()
+    
+    response_time = round(end_time - start_time, 2)
+
+    #print(response.response_metadata)
+
+    token_usage = response.response_metadata.get(
+        "token_usage",
+        {}
+    )
+
+    prompt_tokens = token_usage.get(
+        "prompt_tokens",
+        0
+    )
+
+    completion_tokens = token_usage.get(
+        "completion_tokens",
+        0
+    )
+
+    total_tokens = token_usage.get(
+        "total_tokens",
+        0
+    )
+
+
     return {
         "answer": response.content,
         "sources": get_sources(retrieved_docs),
         "retrieved_chunks": len(retrieved_docs),
+        "response_time": response_time,
+        "prompt_tokens": prompt_tokens,
+        "completion_tokens": completion_tokens,
+        "total_tokens": total_tokens,
     }

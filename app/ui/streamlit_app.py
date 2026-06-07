@@ -43,3 +43,30 @@ if st.button("Ask Question"):
                 f"- {source['source']} "
                 f"(Page {source['page']})"
             )
+        
+        st.subheader("Metrics")
+
+        st.write(
+            f"Retrieved Chunks: "
+            f"{result['retrieved_chunks']}"
+        )
+
+        st.write(
+            f"Response Time: "
+            f"{result['response_time']} seconds"
+        )
+
+        st.write(
+            f"Prompt Tokens: "
+            f"{result['prompt_tokens']}"
+        )
+
+        st.write(
+            f"Completion Tokens: "
+            f"{result['completion_tokens']}"
+        )
+
+        st.write(
+            f"Total Tokens: "
+            f"{result['total_tokens']}"
+        )
